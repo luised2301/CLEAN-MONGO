@@ -15,14 +15,12 @@ router.post("/", async (request, response)=>{
     response.json({sucess:true,
         data:{koder}
          })
-    
     }
     catch(error){
         response.status(400)
     response.json({sucess:false,
         message:error
          })
-
     }
 })
 router.delete("/")

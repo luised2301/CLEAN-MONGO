@@ -2,10 +2,12 @@ const { application } = require("express")
 const express = require("express")
 const server = express()
 const routerKoder = require("./routes/koder.route")
+const routerMentor = require("./routes/mentor.route")
 //middlewares
 server.use(express.json())
 //middlewares de ruta
 server.use("/koders", routerKoder)
+server.use("/mentors", routerMentor)
 // Endpoint de Home
 
 //Exportar
