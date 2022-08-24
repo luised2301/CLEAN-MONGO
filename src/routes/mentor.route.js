@@ -1,6 +1,6 @@
 const express = require("express")
 
-const {create, consult, remove, update}= require("../usecases/mentor.usecase")
+const {create, consult, remove, update, filter}= require("../usecases/mentor.usecase")
 
 //Haciendo un router
 const router = express.Router()
@@ -27,11 +27,13 @@ router.post("/", async (request, response)=>{
 
 
 
-router.get("/", async (request, response)=>{
-    //Recibir el request
+router.get("/:id", async (request, response)=>{
+    //Recibir el 
+    const {params}=request
+
     try{
     //Ejecutar la funcion create del usercase
-    const mentor = await consult(request.query.id)
+    const mentor = await consult(params.id)
     //Responder
     response.status(201)
     response.json({sucess:true,
@@ -46,12 +48,34 @@ router.get("/", async (request, response)=>{
     }
 })
 
-router.patch("/", async (request, response)=>{
+router.get("/", async (request, response) => {
+    try{
+      const { query } = request
+      // {}
+      // { name: Alfredo }
+      console.log(query)
+      const mentors = await filter(query)
+      response.json({
+        success: true,
+        data: {
+          mentors
+        }
+      })
+    }catch(error) {
+      response.status(400)
+      response.json({
+        success: false,
+        message: error.message
+      })
+    }
+  })
+
+router.patch("/:id", async (request, response)=>{
     //Recibir el request
     try{
     //Ejecutar la funcion update del usercase
-    const {body}=request
-    const mentor = await update(request.query.id, body)
+    const {body,params}=request
+    const mentor = await update(params.id, body)
     //Responder
     response.status(201)
     response.json({sucess:true,
@@ -66,11 +90,12 @@ router.patch("/", async (request, response)=>{
     }
 })
 
-router.delete("/", async (request, response)=>{
+router.delete("/:id", async (request, response)=>{
     //Recibir el request
+    const {params}=request
     try{
     //Ejecutar la funcion create del usercase
-    const mentor = await remove(request.query.id)
+    const mentor = await remove(params.id)
     //Responder
     response.status(201)
     response.json({sucess:true,

@@ -21,6 +21,14 @@ const consult =(data)=>{
     const mentor = Mentor.findById(data)
     return mentor 
 }
+
+const filter = (filters) => {
+    const mentors = Mentor.find(filters)
+    console.log(filters)
+    console.log(mentors)
+    return mentors
+  }
+
 const update =(id, data)=>{
     const mentor = Mentor.findByIdAndUpdate(id, data, { returnDocument: "after" })
     return mentor 
@@ -35,4 +43,4 @@ const remove = (data)=>{
 //Actualizar mentor
 //Eliminar mentor
 
-module.exports = {create, consult, update,remove}
+module.exports = {create, consult, filter, update,remove}
