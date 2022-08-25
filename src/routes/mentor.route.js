@@ -1,113 +1,120 @@
+const { query } = require("express")
 const express = require("express")
+const { 
+  createMentor,
+  getMentor,
+  allMentors,
+  updateMentor,
+  removeMentor
+  } = require("../usecases/mentor.usecase")
 
-const {create, consult, remove, update, filter}= require("../usecases/mentor.usecase")
-
-//Haciendo un router
 const router = express.Router()
-// Endpoint de crear
-router.post("/", async (request, response)=>{
-    //Recibir el request
-    try{
-        const {body}=request
-    //Ejecutar la funcion create del usercase
-    const mentor = await create(body)
-    //Responder
+
+// Endpoints
+
+router.post("/", async (request, response) => {
+
+  const { body } = request
+  try {
+    const mentor = await createMentor(body)
     response.status(201)
-    response.json({sucess:true,
-        data:{mentor}
-         })
-    }
-    catch(error){
-        response.status(400)
-    response.json({sucess:false,
-        message:error
-         })
-    }
+    response.json({
+      success: true,
+      data: {
+        mentor
+      }
+    })
+  } catch(error) {
+    response.status(400)
+    response.json({
+      success: false,
+      message: error.message
+    })
+  }
 })
 
-
-
-router.get("/:id", async (request, response)=>{
-    //Recibir el 
-    const {params}=request
-
-    try{
-    //Ejecutar la funcion create del usercase
-    const mentor = await consult(params.id)
-    //Responder
-    response.status(201)
-    response.json({sucess:true,
-        data:{mentor}
-         })
-    }
-    catch(error){
-        response.status(400)
-    response.json({sucess:false,
-        message:error
-         })
-    }
+// Path param
+// Arquitecture rest -> /recursos/identificador
+// identificador
+router.get("/:id", async (request, response) => {
+  try {
+    // Path params
+    const { params } = request
+    const mentor = await getMentor(params.id) 
+    // Si no ponemos status -> 200
+    response.json({
+      success: true,
+      data: {
+        mentor
+      }
+    })
+  }catch(error) {
+    response.status(400)
+    response.json({
+      success: false,
+      message: error.message
+    })
+  }
 })
 
+// Query params
+// ?parametro=valor&otroparametro=valore&otroparamtrx2=valor
 router.get("/", async (request, response) => {
-    try{
-      const { query } = request
-      // {}
-      // { name: Alfredo }
-      console.log(query)
-      const mentors = await filter(query)
-      response.json({
-        success: true,
-        data: {
-          mentors
-        }
-      })
-    }catch(error) {
-      response.status(400)
-      response.json({
-        success: false,
-        message: error.message
-      })
-    }
-  })
-
-router.patch("/:id", async (request, response)=>{
-    //Recibir el request
-    try{
-    //Ejecutar la funcion update del usercase
-    const {body,params}=request
-    const mentor = await update(params.id, body)
-    //Responder
-    response.status(201)
-    response.json({sucess:true,
-        data:{mentor}
-         })
-    }
-    catch(error){
-        response.status(400)
-    response.json({sucess:false,
-        message:error
-         })
-    }
+  try{
+    const { query } = request
+    // {}
+    // { name: Alfredo }
+    const mentors = await allMentors(query)
+    response.json({
+      success: true,
+      data: {
+        mentors
+      }
+    })
+  }catch(error) {
+    response.status(400)
+    response.json({
+      success: false,
+      message: error.message
+    })
+  }
 })
 
-router.delete("/:id", async (request, response)=>{
-    //Recibir el request
-    const {params}=request
-    try{
-    //Ejecutar la funcion create del usercase
-    const mentor = await remove(params.id)
-    //Responder
-    response.status(201)
-    response.json({sucess:true,
-        data:{mentor}
-         })
-    }
-    catch(error){
-        response.status(400)
-    response.json({sucess:false,
-        message:error
-         })
-    }
+router.patch("/:id", async (request, response) => {
+  try{
+    const { params, body } = request
+    const mentor = await updateMentor(params.id, body)
+
+    response.json({
+      success: true,
+      data: {
+        mentor
+      }
+    })
+
+  }catch(error) {
+    response.status(400)
+    response.json({
+      success: false,
+      message: error.message
+    })
+  }
 })
 
+router.delete("/:id", async (request, response) => {
+  try{
+    const { params } = request
+    const mentor = await removeMentor(params.id)
+    response.json({
+      success: true,
+    })
+
+  }catch(error){
+    response.status(400)
+    response.json({
+      success: false,
+      message: error.message
+    })
+  }
+})
 module.exports = router

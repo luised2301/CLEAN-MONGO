@@ -1,46 +1,47 @@
-//importamos el modelo de mentor
+const Mentor = require("../models/mentor.model")
 
-const Mentor =require("../models/mentor.model")
+// Funciones
+// Handlers
 
-//Usos de caso son funciones tambien conocidas como Handlers
-
-
-//Nota: los usos de caso no tienen acceso al body , ni al request
-
-//1.-Uso de caso para crear usuario
-//Se recibe la data del coder
-const create = (data)=>{
-    //Crear un coder
-    const mentor = Mentor.create(data)
-    return mentor
-    //Tambien se puede ahorrar lineas retornando en la misma declaracion:
-    //return mentor.create(data)
+// 1- Uso de caso -> Crear un mentor
+const createMentor = (mentorData) => {
+  // Crear un mentor
+  const mentor = Mentor.create(mentorData)
+  return mentor
 }
 
-const consult =(data)=>{
-    const mentor = Mentor.findById(data)
-    return mentor 
+// Retrieve Mentor
+const getMentor = (id) => {
+  const mentor = Mentor.findById(id)
+  return mentor
 }
 
-const filter = (filters) => {
-    const mentors = Mentor.find(filters)
-    console.log(filters)
-    console.log(mentors)
-    return mentors
-  }
-
-const update =(id, data)=>{
-    const mentor = Mentor.findByIdAndUpdate(id, data, { returnDocument: "after" })
-    return mentor 
+// All mentors
+const allMentors = (filters) => {
+  const mentors = Mentor.find(filters)
+  return mentors
 }
 
-const remove = (data)=>{
-    const mentor = Mentor.findByIdAndRemove(data)
-    return mentor 
+// Actualizar un mentor
+const updateMentor = (id, mentorData) => {
+  // id
+  // objetoupdate
+  // options
+  const mentor = Mentor.findByIdAndUpdate(id, mentorData, { returnDocument: "after" })
+  return mentor
 }
 
-//Get mentor
-//Actualizar mentor
-//Eliminar mentor
+// Eliminar mentor
+const removeMentor = (id) => {
+  const mentor = Mentor.findByIdAndDelete(id)
+  return mentor
+}
 
-module.exports = {create, consult, filter, update,remove}
+
+module.exports = {
+  createMentor,
+  getMentor,
+  allMentors,
+  updateMentor,
+  removeMentor
+}

@@ -1,26 +1,21 @@
-// Endpoints
 const express = require("express")
-const { create } = require("../usecases/koder.usecase")
+const { createUser } = require("../usecases/user.usecase")
 
-// Haciendo router
 const router = express.Router()
 
-// Endpoint de crear
-// /koders
+
 router.post("/", async (request, response) => {
-  // Recibir el request
-  // Response
-  try {
-    const { body } = request
-    const koder = await create(body)
+  const { body } = request
+  try{
+    const user = await createUser(body)
     response.status(201)
     response.json({
       success: true,
       data: {
-        koder
+        user
       }
     })
-  } catch(error) {
+  }catch(error){
     response.status(400)
     response.json({
       success: false,
@@ -29,6 +24,4 @@ router.post("/", async (request, response) => {
   }
 })
 
-
-// Exportar la ruta -> router
 module.exports = router
